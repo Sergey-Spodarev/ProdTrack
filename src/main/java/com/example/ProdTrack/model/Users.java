@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
-@ToString(exclude = {"createTasks", "assignedTasks"})
+@ToString(exclude = {"createdTasks", "assignedTasks"})
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

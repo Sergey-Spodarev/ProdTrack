@@ -33,8 +33,7 @@ public class AdminService {
     }
 
     public List<UserDTO> getAllUsersWithTask(){
-        List<Users> users = userRepository.findAllByAssignedTasks()
-                .orElseThrow(()-> new RuntimeException("No tasks found"));
+        List<Users> users = userRepository.findAllByRole("USER");
         return users.stream()
                 .map(this::convertTODTO)
                 .toList();

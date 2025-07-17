@@ -48,7 +48,7 @@ public class AdminController {
                 .body(adminService.updateTask(taskDTO));
     }
 
-    @DeleteMapping("/delTask/{id}")
+    @DeleteMapping("/delTask/{id}")//todo проверить на сайте работаспасобнасть
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         adminService.deleteTask(id);
         return ResponseEntity.ok().build();
