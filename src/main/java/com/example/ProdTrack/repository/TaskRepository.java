@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface WorkerRopository extends CrudRepository<Task, Long> {
+public interface TaskRepository extends CrudRepository<Task, Long> {
     Optional<Task> findById(Long id);
 }

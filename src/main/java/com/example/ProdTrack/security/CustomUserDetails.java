@@ -26,7 +26,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
     private final boolean accountNonLocked;//Заблокирован ли пользователь
 
     CustomUserDetails(Users user) {
-        this.userName = user.getEmail();
+        this.userName = user.getUsername();
         this.password = user.getPassword();
         this.authorities = AuthorityUtils.createAuthorityList(user.getRole());//AuthorityUtils для работы с полномочиями в Spring Security
 

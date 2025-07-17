@@ -23,6 +23,7 @@ public class Task {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private String comment;
 
     @ManyToOne
     private Users created;

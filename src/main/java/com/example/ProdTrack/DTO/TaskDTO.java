@@ -1,6 +1,5 @@
 package com.example.ProdTrack.DTO;
 
-import com.example.ProdTrack.model.Task;
 import com.example.ProdTrack.model.enums;
 import lombok.Data;
 
@@ -18,4 +17,5 @@ public class TaskDTO {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private String comment;
 }
