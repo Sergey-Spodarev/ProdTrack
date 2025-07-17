@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .switch-btn {
+            background: none;
+            border: none;
+            color: #0066cc;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Форма входа -->
+    <div id="login-form">
+        <h2>Вход</h2>
+        <form id="login">
+            <div class="form-group">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Пароль:</label>
+                <input type="password" id="login-password" required>
+            </div>
+            <button type="submit">Войти</button>
+        </form>
+        <div class="switch-form">
+            <button class="switch-btn" onclick="showRegisterForm()">Зарегистрировать нового пользователя</button>
+        </div>
+    </div>
+
+    <!-- Форма регистрации -->
+    <div id="register-form" class="hidden">
+        <h2>Регистрация</h2>
+        <form id="register">
+            <div class="form-group">
+                <label for="register-username">Логин:</label>
+                <input type="text" id="register-username" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Пароль:</label>
+                <input type="password" id="register-password" required>
+            </div>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <div class="switch-form">
+            <button class="switch-btn" onclick="showLoginForm()">Уже есть аккаунт? Войти</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showRegisterForm() {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.remove('hidden');
+    }
+
+    function showLoginForm() {
+        document.getElementById('register-form').classList.add('hidden');
+        document.getElementById('login-form').classList.remove('hidden');
+    }
+
+    // Обработка формы регистрации
+    document.getElementById('register').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const userData = {
+            username: document.getElementById('register-username').value,
+            email: document.getElementById('register-email').value,
+            password: document.getElementById('register-password').value,
+            role: "USER"
+        };
+
+        fetch('/api/user/register/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка регистрации');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Регистрация успешна!');
+                showLoginForm();
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+
+    // Обработка формы входа (заглушка)
+    document.getElementById('login').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const loginData = {
+            email: document.getElementById('login-email').value,
+            password: document.getElementById('login-password').value
+        };
+
+        // Здесь должна быть реализация входа
+        alert('Функция входа будет реализована позже');
+    });
+</script>
+</body>
+</html>
