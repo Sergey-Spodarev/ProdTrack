@@ -31,21 +31,60 @@ public class WorkerService {
                 .toList();
     }
 
+    public TaskDTO updateTask(TaskDTO taskDTO) {
+        Task task = taskRepository.findById(taskDTO.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Task not found"));
+        task.setDescription(taskDTO.getDescription());
+        task.setPriority(taskDTO.getPriority());
+        task.setStartDate(taskDTO.getStartDate());
+        task.setEndDate(taskDTO.getEndDate());
+        task.setTitle(taskDTO.getTitle());
+        if (updateRequired(taskDTO.getStage(), taskDTO.getStatus())) {
+            task.setComment("");
+            updateTaskStage(task, taskDTO.getStage());
+            task.setStatus(enums.Status.WAITING);
+        } else {
+            task.setComment(taskDTO.getComment());
+            task.setStage(taskDTO.getStage());
+            task.setStatus(taskDTO.getStatus());
+        }
+        return convertTaskToDTO(taskRepository.save(task));
+    }
+
+    public void updateTaskStage(Task task, enums.Stage stage) {
+        switch (stage) {
+            case PREPARATION:
+                task.setStage(enums.Stage.ASSEMBLING);
+                break;
+            case ASSEMBLING:
+                task.setStage(enums.Stage.CONTROL);
+                break;
+            case CONTROL:
+                task.setStage(enums.Stage.PACKAGING);
+                break;
+            case PACKAGING:
+                task.setStage(enums.Stage.COMPLETED);
+                break;
+            default:
+                throw new IllegalStateException("Unknown stage: " + stage);
+        }
+    }
+
+    public boolean updateRequired(enums.Stage stage, enums.Status status) {
+        return status == enums.Status.COMPLETED && stage != enums.Stage.PACKAGING;
+    }
+
     public TaskDTO convertTaskToDTO(Task task) {
         TaskDTO taskDTO = new TaskDTO();
         taskDTO.setId(task.getId());
         taskDTO.setTitle(task.getTitle());
         taskDTO.setPriority(task.getPriority());
-        if (task.getStatus() != null){
-            taskDTO.setStatus(task.getStatus());
-            taskDTO.setDescription(task.getDescription());
-            taskDTO.setStage(task.getStage());
-        }
-        else {//todo тут стало намного интересней, надо реализовать при нажатии "Выполнено" задача должна автоматически переходить на следующий этап , если он существует.
-            taskDTO.setStatus(enums.Status.WAITING);
-            taskDTO.setDescription("");
-            taskDTO.setStage(enums.Stage.PREPARATION);
-        }
+        taskDTO.setDescription(task.getDescription());
+        taskDTO.setStatus(task.getStatus());
+        taskDTO.setStage(task.getStage());
+        taskDTO.setComment(task.getComment());
+        taskDTO.setStartDate(task.getStartDate());
+        taskDTO.setEndDate(task.getEndDate());
         return taskDTO;
     }
 }
