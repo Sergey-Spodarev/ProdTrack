@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Админка</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #eef2f3, #8e9eab);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+      width: 90%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+    h1 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    .logout-btn {
+      padding: 10px 20px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .add-task-btn, .report-btn {
+      margin: 20px 0;
+      padding: 12px 24px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .add-task-btn:hover {
+      background-color: #2ecc71;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #ecf0f1;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    .task-row {
+      cursor: pointer;
+    }
+    .task-row:hover {
+      background-color: #ecf0f1;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 30px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .close {
+      float: right;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: bold;
+      color: #aaa;
+    }
+    .close:hover {
+      color: black;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .form-actions button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .save-btn {
+      background-color: #2980b9;
+      color: white;
+    }
+    .close-btn {
+      background-color: #bdc3c7;
+      color: white;
+    }
+    .save-btn:hover {
+      background-color: #3498db;
+    }
+    .close-btn:hover {
+      background-color: #95a5a6;
+    }
+    .priority-low {
+      background-color: #2ecc71;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    .priority-medium {
+      background-color: #f39c12;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    .priority-high {
+      background-color: #e74c3c;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    .report-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .report-btn:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+<!-- Верхний заголовок и кнопка выхода -->
+<div class="header">
+  <h1>Все задачи</h1>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit" class="logout-btn">Выйти</button>
+  </form>
+</div>
+
+<!-- Основной контейнер -->
+<div class="container">
+  <!-- Кнопка добавления задачи -->
+  <button class="add-task-btn" onclick="openModal()">Добавить задачу</button>
+
+  <!-- Таблица задач -->
+  <table>
+    <thead>
+    <tr>
+      <th>Название</th>
+      <th>Описание</th>
+      <th>Приоритет</th>
+      <th>Этап</th>
+      <th>Статус</th>
+      <th>Исполнитель</th>
+      <th>Дата начала</th>
+      <th>Дата окончания</th>
+    </tr>
+    </thead>
+    <tbody id="taskTableBody">
+    <!-- Задачи будут загружены через JS -->
+    </tbody>
+  </table>
+
+  <!-- Кнопка перехода к отчёту -->
+  <button class="report-btn" onclick="window.location.href='/report'">Перейти к отчётам</button>
+</div>
+
+<!-- Модальное окно для добавления/редактирования -->
+<div id="taskModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle">Новая задача</h2>
+    <input type="hidden" id="taskId" />
+    <label for="title">Название</label>
+    <input type="text" id="title" required>
+    <label for="description">Описание</label>
+    <input type="text" id="description" required>
+    <label for="employee">Исполнитель</label>
+    <select id="employee">
+      <option value="">Не назначен</option>
+      <!-- Исполнители будут загружены через JS -->
+    </select>
+    <label for="priority">Приоритет</label>
+    <select id="priority">
+      <option value="LOW">Низкий</option>
+      <option value="MEDIUM" selected>Средний</option>
+      <option value="HIGH">Высокий</option>
+    </select>
+    <label for="startDate">Дата начала</label>
+    <input type="date" id="startDate" required>
+    <label for="endDate">Дата окончания</label>
+    <input type="date" id="endDate" required>
+    <div class="form-actions">
+      <button class="close-btn" onclick="closeModal()">Закрыть</button>
+      <button class="save-btn" onclick="saveTask()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  let tasks = [];
+  const API_URL = '/api/admin';
+
+  // Загрузка задач
+  async function fetchTasks() {
+    const res = await fetch(`${API_URL}/getAllTask`);
+    tasks = await res.json();
+    renderTasks();
+  }
+
+  // Отрисовка задач в таблице
+  function renderTasks() {
+    const tbody = document.getElementById('taskTableBody');
+    tbody.innerHTML = '';
+    tasks.forEach(task => {
+      const row = document.createElement('tr');
+      row.className = 'task-row';
+      row.onclick = () => openModal(task);
+      row.innerHTML = `
+        <td>${task.title}</td>
+        <td>${task.description}</td>
+        <td><span class="priority-${task.priority.toLowerCase()}">${task.priority}</span></td>
+        <td>${task.stage}</td>
+        <td>${task.status}</td>
+        <td>${task.assigneeUsername || 'Не назначен'}</td>
+        <td>${task.startDate || 'Н/Д'}</td>
+        <td>${task.endDate || 'Н/Д'}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  // Открытие модального окна
+  function openModal(task = null) {
+    document.getElementById('modalTitle').innerText = task ? 'Редактировать задачу' : 'Новая задача';
+    document.getElementById('taskId').value = task?.id || '';
+    document.getElementById('title').value = task?.title || '';
+    document.getElementById('description').value = task?.description || '';
+    document.getElementById('employee').value = task?.assigneeUsername || '';
+    document.getElementById('priority').value = task?.priority || 'MEDIUM';
+    document.getElementById('startDate').value = task?.startDate || '';
+    document.getElementById('endDate').value = task?.endDate || '';
+    document.getElementById('taskModal').style.display = 'block';
+  }
+
+  // Закрытие модального окна
+  function closeModal() {
+    document.getElementById('taskModal').style.display = 'none';
+  }
+
+  // Сохранение задачи
+  async function saveTask() {
+    const id = document.getElementById('taskId').value;
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const assigneeUsername = document.getElementById('employee').value;
+    const priority = document.getElementById('priority').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // Валидация
+    if (!title || !description || !startDate || !endDate || !priority) {
+      alert("Все поля обязательны к заполнению");
+      return;
+    }
+
+    const task = {
+      title,
+      description,
+      assigneeUsername,
+      priority,
+      startDate,
+      endDate,
+      stage: 'PREPARATION',
+      status: 'WAITING'
+    };
+
+    if (id) {
+      task.id = parseInt(id);
+      const res = await fetch(`${API_URL}/updateTask`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task)
+      });
+      if (!res.ok) alert("Ошибка при обновлении задачи");
+    } else {
+      const res = await fetch(`${API_URL}/addTask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(task)
+      });
+      if (!res.ok) alert("Ошибка при добавлении задачи");
+    }
+
+    closeModal();
+    fetchTasks();
+  }
+
+  // Загрузка пользователей
+  async function fetchUsers() {
+    const res = await fetch(`${API_URL}/getAllUsersWithTask`);
+    const users = await res.json();
+    const select = document.getElementById('employee');
+    select.innerHTML = '<option value="">Не назначен</option>';
+    users.forEach(user => {
+      const option = document.createElement('option');
+      option.value = user.username;
+      option.textContent = user.username;
+      select.appendChild(option);
+    });
+  }
+
+  // Автозагрузка при старте
+  window.onload = () => {
+    fetchUsers();
+    fetchTasks();
+  };
+</script>
+</body>
+</html>
