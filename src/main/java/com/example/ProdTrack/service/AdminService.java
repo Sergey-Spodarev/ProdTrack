@@ -102,7 +102,9 @@ public class AdminService {
         taskDTO.setComment(task.getComment());
         taskDTO.setStatus(task.getStatus());
         taskDTO.setStage(task.getStage());
-        taskDTO.setAssigneeUsername(task.getAssigned().getUsername());
+        taskDTO.setAssigneeUsername(
+                task.getAssigned() != null ? task.getAssigned().getUsername() : null
+        );
         return taskDTO;
     }
 }

@@ -25,10 +25,9 @@ public class SecurityConfig {
                 c.securityContextRepository(new HttpSessionSecurityContextRepository())
         );
 
-
         http
                 .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.requestMatchers("/", "/login", "/api/user/register/**", "/api/admin/**").permitAll()
+                        authorizeRequests.requestMatchers("/", "/login", "/api/user/register/**", "/api/admin/**", "/api/report/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->formLogin

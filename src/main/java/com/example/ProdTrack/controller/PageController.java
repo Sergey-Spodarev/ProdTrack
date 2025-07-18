@@ -26,4 +26,9 @@ public class PageController {
     public String userPage() {
         return "user"; // user.html
     }
+
+    @GetMapping("/report")
+    public String reportPage() {
+        return "report";
+    }
 }
