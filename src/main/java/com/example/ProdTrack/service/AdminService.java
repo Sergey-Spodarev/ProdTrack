@@ -7,6 +7,7 @@ import com.example.ProdTrack.model.Users;
 import com.example.ProdTrack.model.enums;
 import com.example.ProdTrack.repository.TaskRepository;
 import com.example.ProdTrack.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +55,15 @@ public class AdminService {
         newTask.setEndDate(taskDTO.getEndDate());
         newTask.setComment("");
 
+        newTask.setCreated(getUser(username));
+        newTask.setAssigned(getUser(taskDTO.getAssigneeUsername()));
+
         return convertToDTO(taskRepository.save(newTask));
+    }
+
+    public Users getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
     }
 
     public TaskDTO updateTask(TaskDTO taskDTO) {
@@ -93,6 +102,7 @@ public class AdminService {
         taskDTO.setComment(task.getComment());
         taskDTO.setStatus(task.getStatus());
         taskDTO.setStage(task.getStage());
+        taskDTO.setAssigneeUsername(task.getAssigned().getUsername());
         return taskDTO;
     }
 }

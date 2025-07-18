@@ -18,4 +18,6 @@ public class TaskDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String comment;
+
+    private String assigneeUsername;
 }

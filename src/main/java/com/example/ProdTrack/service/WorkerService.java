@@ -85,6 +85,7 @@ public class WorkerService {
         taskDTO.setComment(task.getComment());
         taskDTO.setStartDate(task.getStartDate());
         taskDTO.setEndDate(task.getEndDate());
+        taskDTO.setAssigneeUsername(task.getAssigned().getUsername());
         return taskDTO;
     }
 }
