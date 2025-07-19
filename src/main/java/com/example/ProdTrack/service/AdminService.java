@@ -81,6 +81,16 @@ public class AdminService {
         taskRepository.deleteById(id);
     }
 
+    public UserDTO updateRole(UserDTO userDTO) {
+        Users user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        user.setRole("ADMIN");
+        user.getAssignedTasks().clear();
+        user.getCreatedTasks().clear();
+        userRepository.save(user);
+        return convertTODTO(user);
+    }
+
     public UserDTO convertTODTO(Users user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());

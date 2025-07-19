@@ -14,6 +14,7 @@
       flex-direction: column;
       align-items: center;
     }
+
     .header {
       width: 90%;
       max-width: 1000px;
@@ -22,10 +23,12 @@
       align-items: center;
       margin-top: 30px;
     }
+
     h1 {
       margin: 0;
       color: #2c3e50;
     }
+
     .logout-btn {
       padding: 10px 20px;
       background-color: #e74c3c;
@@ -35,52 +38,72 @@
       border-radius: 5px;
       font-size: 16px;
     }
+
     .logout-btn:hover {
       background-color: #c0392b;
     }
+
     .container {
       width: 90%;
       max-width: 1000px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-top: 20px;
     }
-    .add-task-btn, .report-btn {
-      margin: 20px 0;
-      padding: 12px 24px;
-      background-color: #27ae60;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .add-task-btn:hover {
-      background-color: #2ecc71;
-    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 30px;
     }
+
     th, td {
       padding: 12px;
       border-bottom: 1px solid #ddd;
       text-align: left;
     }
+
     th {
       background-color: #ecf0f1;
     }
+
     tr:hover {
       background-color: #f1f1f1;
     }
+
     .task-row {
       cursor: pointer;
     }
+
     .task-row:hover {
       background-color: #ecf0f1;
     }
+
+    .add-task-btn, .promote-btn, .report-btn {
+      margin: 10px 0;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .add-task-btn {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    .promote-btn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .report-btn {
+      background-color: #f39c12;
+      color: white;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -92,87 +115,90 @@
       overflow: auto;
       background-color: rgba(0,0,0,0.4);
     }
+
     .modal-content {
-      background-color: #fefefe;
+      background-color: #fff;
       margin: 5% auto;
       padding: 30px;
       border: 1px solid #888;
-      width: 90%;
-      max-width: 500px;
+      width: 40%;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
+
     .close {
       float: right;
-      cursor: pointer;
       font-size: 24px;
       font-weight: bold;
+      cursor: pointer;
       color: #aaa;
     }
+
     .close:hover {
       color: black;
     }
+
     label {
       display: block;
-      margin-top: 15px;
-      font-weight: 600;
-      color: #333;
+      margin-top: 10px;
+      font-weight: bold;
     }
+
     input[type="text"],
     input[type="date"],
     select {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
+      border-radius: 4px;
     }
+
     .form-actions {
       margin-top: 20px;
       display: flex;
       justify-content: space-between;
     }
+
     .form-actions button {
       padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
+
     .save-btn {
       background-color: #2980b9;
       color: white;
     }
+
     .close-btn {
       background-color: #bdc3c7;
       color: white;
     }
-    .save-btn:hover {
-      background-color: #3498db;
-    }
-    .close-btn:hover {
-      background-color: #95a5a6;
-    }
+
     .priority-low {
       background-color: #2ecc71;
       color: white;
       padding: 5px 10px;
       border-radius: 4px;
     }
+
     .priority-medium {
       background-color: #f39c12;
       color: white;
       padding: 5px 10px;
       border-radius: 4px;
     }
+
     .priority-high {
       background-color: #e74c3c;
       color: white;
       padding: 5px 10px;
       border-radius: 4px;
     }
+
     .report-btn {
-      background-color: #3498db;
+      background-color: #f39c12;
       color: white;
       border: none;
       padding: 12px 20px;
@@ -180,8 +206,9 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     .report-btn:hover {
-      background-color: #2980b9;
+      background-color: #d39a0f;
     }
   </style>
 </head>
@@ -194,10 +221,10 @@
   </form>
 </div>
 
-<!-- Основной контейнер -->
 <div class="container">
-  <!-- Кнопка добавления задачи -->
-  <button class="add-task-btn" onclick="openModal()">Добавить задачу</button>
+  <button class="add-task-btn" onclick="openTaskModal()">Добавить задачу</button>
+  <button class="promote-btn" onclick="openPromoteModal()">Добавить админа</button>
+  <button class="report-btn" onclick="window.location.href='/report'">Перейти к отчётам</button>
 
   <!-- Таблица задач -->
   <table>
@@ -217,39 +244,62 @@
     <!-- Задачи будут загружены через JS -->
     </tbody>
   </table>
-
-  <!-- Кнопка перехода к отчёту -->
-  <button class="report-btn" onclick="window.location.href='/report'">Перейти к отчётам</button>
 </div>
 
-<!-- Модальное окно для добавления/редактирования -->
+<!-- Модальное окно для добавления/редактирования задачи -->
 <div id="taskModal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h2 id="modalTitle">Новая задача</h2>
-    <input type="hidden" id="taskId" />
-    <label for="title">Название</label>
-    <input type="text" id="title" required>
-    <label for="description">Описание</label>
-    <input type="text" id="description" required>
-    <label for="employee">Исполнитель</label>
-    <select id="employee">
+    <span class="close" onclick="closeTaskModal()">&times;</span>
+    <h2 id="taskModalTitle">Новая задача</h2>
+
+    <input type="hidden" id="taskId">
+    <label for="taskTitle">Название</label>
+    <input type="text" id="taskTitle" required>
+
+    <label for="taskDescription">Описание</label>
+    <input type="text" id="taskDescription" required>
+
+    <label for="taskEmployee">Исполнитель</label>
+    <select id="taskEmployee">
       <option value="">Не назначен</option>
-      <!-- Исполнители будут загружены через JS -->
+      <!-- Пользователи будут загружены через JS -->
     </select>
-    <label for="priority">Приоритет</label>
-    <select id="priority">
+
+    <label for="taskPriority">Приоритет</label>
+    <select id="taskPriority">
       <option value="LOW">Низкий</option>
       <option value="MEDIUM" selected>Средний</option>
       <option value="HIGH">Высокий</option>
     </select>
-    <label for="startDate">Дата начала</label>
-    <input type="date" id="startDate" required>
-    <label for="endDate">Дата окончания</label>
-    <input type="date" id="endDate" required>
+
+    <label for="taskStartDate">Дата начала</label>
+    <input type="date" id="taskStartDate" required>
+
+    <label for="taskEndDate">Дата окончания</label>
+    <input type="date" id="taskEndDate" required>
+
     <div class="form-actions">
-      <button class="close-btn" onclick="closeModal()">Закрыть</button>
+      <button class="close-btn" onclick="closeTaskModal()">Закрыть</button>
       <button class="save-btn" onclick="saveTask()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для повышения до админа -->
+<div id="promoteModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closePromoteModal()">&times;</span>
+    <h2>Назначить админа</h2>
+
+    <label for="userSelect">Выберите пользователя</label>
+    <select id="userSelect">
+      <option value="">Не выбрано</option>
+      <!-- Пользователи будут загружены через JS -->
+    </select>
+
+    <div class="form-actions">
+      <button class="close-btn" onclick="closePromoteModal()">Закрыть</button>
+      <button class="save-btn" onclick="promoteToAdmin()">Сделать админом</button>
     </div>
   </div>
 </div>
@@ -257,6 +307,7 @@
 <!-- JavaScript -->
 <script>
   let tasks = [];
+  let users = [];
   const API_URL = '/api/admin';
 
   // Загрузка задач
@@ -266,59 +317,68 @@
     renderTasks();
   }
 
-  // Отрисовка задач в таблице
+  // Отрисовка задач
   function renderTasks() {
     const tbody = document.getElementById('taskTableBody');
     tbody.innerHTML = '';
     tasks.forEach(task => {
       const row = document.createElement('tr');
       row.className = 'task-row';
-      row.onclick = () => openModal(task);
       row.innerHTML = `
-        <td>${task.title}</td>
-        <td>${task.description}</td>
-        <td><span class="priority-${task.priority.toLowerCase()}">${task.priority}</span></td>
-        <td>${task.stage}</td>
-        <td>${task.status}</td>
-        <td>${task.assigneeUsername || 'Не назначен'}</td>
-        <td>${task.startDate || 'Н/Д'}</td>
-        <td>${task.endDate || 'Н/Д'}</td>
-      `;
+                    <td>${task.title}</td>
+                    <td>${task.description}</td>
+                    <td><span class="priority-${task.priority.toLowerCase()}">${task.priority}</span></td>
+                    <td>${task.stage}</td>
+                    <td>${task.status}</td>
+                    <td>${task.assigneeUsername || 'Не назначен'}</td>
+                    <td>${task.startDate || 'Н/Д'}</td>
+                    <td>${task.endDate || 'Н/Д'}</td>
+                `;
+      row.onclick = () => openTaskModal(task);
       tbody.appendChild(row);
     });
   }
 
-  // Открытие модального окна
-  function openModal(task = null) {
-    document.getElementById('modalTitle').innerText = task ? 'Редактировать задачу' : 'Новая задача';
-    document.getElementById('taskId').value = task?.id || '';
-    document.getElementById('title').value = task?.title || '';
-    document.getElementById('description').value = task?.description || '';
-    document.getElementById('employee').value = task?.assigneeUsername || '';
-    document.getElementById('priority').value = task?.priority || 'MEDIUM';
-    document.getElementById('startDate').value = task?.startDate || '';
-    document.getElementById('endDate').value = task?.endDate || '';
+  // Открытие модального окна задачи
+  function openTaskModal(task = null) {
+    document.getElementById('taskModalTitle').innerText = task ? 'Редактировать задачу' : 'Новая задача';
+    if (task) {
+      document.getElementById('taskId').value = task.id;
+      document.getElementById('taskTitle').value = task.title;
+      document.getElementById('taskDescription').value = task.description;
+      document.getElementById('taskEmployee').value = task.assigneeUsername || '';
+      document.getElementById('taskPriority').value = task.priority;
+      document.getElementById('taskStartDate').value = task.startDate || '';
+      document.getElementById('taskEndDate').value = task.endDate || '';
+    } else {
+      document.getElementById('taskId').value = '';
+      document.getElementById('taskTitle').value = '';
+      document.getElementById('taskDescription').value = '';
+      document.getElementById('taskEmployee').value = '';
+      document.getElementById('taskPriority').value = 'MEDIUM';
+      document.getElementById('taskStartDate').value = '';
+      document.getElementById('taskEndDate').value = '';
+    }
     document.getElementById('taskModal').style.display = 'block';
   }
 
-  // Закрытие модального окна
-  function closeModal() {
+  // Закрытие модального окна задачи
+  function closeTaskModal() {
     document.getElementById('taskModal').style.display = 'none';
   }
 
   // Сохранение задачи
   async function saveTask() {
     const id = document.getElementById('taskId').value;
-    const title = document.getElementById('title').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const assigneeUsername = document.getElementById('employee').value;
-    const priority = document.getElementById('priority').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+    const title = document.getElementById('taskTitle').value.trim();
+    const description = document.getElementById('taskDescription').value.trim();
+    const assigneeUsername = document.getElementById('taskEmployee').value;
+    const priority = document.getElementById('taskPriority').value;
+    const startDate = document.getElementById('taskStartDate').value;
+    const endDate = document.getElementById('taskEndDate').value;
 
-    // Валидация
     if (!title || !description || !startDate || !endDate || !priority) {
-      alert("Все поля обязательны к заполнению");
+      alert("Все поля обязательны");
       return;
     }
 
@@ -335,31 +395,30 @@
 
     if (id) {
       task.id = parseInt(id);
-      const res = await fetch(`${API_URL}/updateTask`, {
+      await fetch('/api/admin/updateTask', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task)
       });
-      if (!res.ok) alert("Ошибка при обновлении задачи");
     } else {
-      const res = await fetch(`${API_URL}/addTask`, {
+      await fetch('/api/admin/addTask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task)
       });
-      if (!res.ok) alert("Ошибка при добавлении задачи");
     }
 
-    closeModal();
+    closeTaskModal();
     fetchTasks();
   }
 
-  // Загрузка пользователей
-  async function fetchUsers() {
-    const res = await fetch(`${API_URL}/getAllUsersWithTask`);
-    const users = await res.json();
-    const select = document.getElementById('employee');
+  // Загрузка пользователей в форму задачи
+  async function fetchUsersForTaskForm() {
+    const res = await fetch('/api/admin/getAllUsersWithTask');
+    users = await res.json();
+    const select = document.getElementById('taskEmployee');
     select.innerHTML = '<option value="">Не назначен</option>';
+
     users.forEach(user => {
       const option = document.createElement('option');
       option.value = user.username;
@@ -368,10 +427,60 @@
     });
   }
 
-  // Автозагрузка при старте
+  // Открытие модального окна повышения
+  function openPromoteModal() {
+    document.getElementById('promoteModal').style.display = 'block';
+    loadUsersForPromote();
+  }
+
+  // Закрытие модального окна повышения
+  function closePromoteModal() {
+    document.getElementById('promoteModal').style.display = 'none';
+  }
+
+  // Загрузка пользователей для повышения
+  async function loadUsersForPromote() {
+    const res = await fetch('/api/admin/getAllUsersWithTask');
+    const userList = await res.json();
+    const select = document.getElementById('userSelect');
+    select.innerHTML = '<option value="">Не выбрано</option>';
+
+    userList.forEach(user => {
+      const option = document.createElement('option');
+      option.value = user.id;
+      option.textContent = user.username;
+      select.appendChild(option);
+    });
+  }
+
+  // Назначение админа
+  async function promoteToAdmin() {
+    const userId = document.getElementById('userSelect').value;
+    if (!userId) {
+      alert("Выберите пользователя");
+      return;
+    }
+
+    const res = await fetch('/api/admin/updateRole', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: userId, role: 'ADMIN' })
+    });
+
+    if (res.ok) {
+      alert("Пользователь стал админом");
+      closePromoteModal();
+      fetchUsersForTaskForm(); // обновляем список пользователей
+      fetchTasks();            // ✅ Обновляем список задач
+    } else {
+      alert("Ошибка при повышении");
+    }
+  }
+
+  // Загрузка данных при старте
   window.onload = () => {
-    fetchUsers();
     fetchTasks();
+    fetchUsersForTaskForm();
   };
 </script>
 </body>
